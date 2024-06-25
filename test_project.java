@@ -5,8 +5,14 @@ import java.util.Scanner;
 public class test_project {
 
     public static String mathSymbols = "+-*/";
+    public static int operand = 0;
 
     public static void main (String[] args) {
+        start ();
+    }
+
+    public static void start () {
+        operand = 0;
         System.out.println("Введите выражение");
         Scanner keyboardScan = new Scanner (System.in);
         String string = keyboardScan.nextLine();
@@ -34,7 +40,8 @@ public class test_project {
                     rom = true;     
                     }
                 else if (!mathSymbols.contains(s)){
-                    System.out.println("Недопустимый символ");
+                    System.out.println("Недопустимый символ\n");
+                    start ();
                     break;
                     }
 
@@ -42,11 +49,13 @@ public class test_project {
                     o++;
                     calcArray [o] += s;
                     o++;
+                    operand++;
                     }
             }
             if (rom == lat) {
-                System.out.println("Ошибка ввода данных");
+                System.out.println("Ошибка ввода данных\n");
                 contune = false;
+                start ();
                 break;
             }
         }
@@ -118,13 +127,11 @@ public class test_project {
             }
             i++;
         }
-        System.out.println("Результат: "+result);
+        System.out.println("Результат: "+result+"\n");
+        start ();
     }
  
     public static void latCalc (String[] args, int arg, Boolean rom) {
-
-        //ScriptEngine не используется специально
-
         int result=0;
         int n=0;
     
@@ -144,17 +151,22 @@ public class test_project {
                         case "-": result = result - n; break;
                         case "*": result = result * n; break; 
                         case "/": result = result / n; break; 
-                        default: System.out.print ("Неверный оператор: " + args[i]);
+                        default: System.out.print ("Неверный оператор: " + args[i]+"\n");
                     }
                 }
             }
             catch (NumberFormatException e) {
-                System.out.print("Ошибка");
+                System.out.print("Ошибка"+"\n");
                 break;
             }
         }
-        if (rom & result > 0) {latToRom(result);}
-        else if (rom & result <= 0) {System.out.print("Ошибка ковертации в римское число. Результат: " + result);}
-        else {System.out.print("Результат: " + result);}
+
+        if (operand > 1) {
+            System.out.print("Количество операндов не соответствует заданию, но результат вы всё равно узнаете.\n");
+        }
+
+        if (rom & result > 0 && result < 4000) {latToRom(result);}
+        else if (rom) {System.out.print("Вне диапазона допустимых римских числе (1—3999). Результат: " + result+"\n"); start ();}
+        else {System.out.print("Результат: " + result+"\n"); start ();}
     }
 }
