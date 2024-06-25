@@ -10,48 +10,52 @@ public class test_project {
         System.out.println("Введите выражение");
         Scanner keyboardScan = new Scanner (System.in);
         String string = keyboardScan.nextLine();
+        calc (string);
+    }
+
+    public static void calc (String arg) {
         int o = 0; 
         Boolean lat = false;
         Boolean rom = false;
         Boolean contune = true;
         String romString = "ivxzlcdm";
-        String [] calcArray = new String [string.length()];
+        String [] calcArray = new String [arg.length()];
         Arrays.fill(calcArray, "");
  
-    for (String s: string.toLowerCase().split("")) {
-        try {
-            int i = Integer.parseInt (s);
-            lat = true;
-            calcArray [o] += s;
-        }
-        catch (NumberFormatException e) {
-            if (romString.contains(s)){
+        for (String s: arg.toLowerCase().split("")) {
+            try {
+                int i = Integer.parseInt (s);
+                lat = true;
                 calcArray [o] += s;
-                rom = true;     
-                }
-            else if (!mathSymbols.contains(s)){
-                System.out.println("Недопустимый символ");
-                break;
-                }
+            }
+            catch (NumberFormatException e) {
+                if (romString.contains(s)){
+                    calcArray [o] += s;
+                    rom = true;     
+                    }
+                else if (!mathSymbols.contains(s)){
+                    System.out.println("Недопустимый символ");
+                    break;
+                    }
 
-            else{
-                o++;
-                calcArray [o] += s;
-                o++;
-                }
+                else{
+                    o++;
+                    calcArray [o] += s;
+                    o++;
+                    }
+            }
+            if (rom == lat) {
+                System.out.println("Ошибка ввода данных");
+                contune = false;
+                break;
+            }
         }
-        if (rom == lat) {
-            System.out.println("Ошибка ввода данных");
-            contune = false;
-            break;
-        }
-    }
-        if (contune == true & lat == true) {
-            latCalc (calcArray, o, false);
-        }
-        else if (contune == true & rom == true) {
-            romToLat (calcArray, o);
-        }
+            if (contune == true & lat == true) {
+                latCalc (calcArray, o, false);
+            }
+            else if (contune == true & rom == true) {
+                romToLat (calcArray, o);
+            }
     }
 
     public static void romToLat (String[] args, int arg) {
@@ -114,7 +118,7 @@ public class test_project {
             }
             i++;
         }
-        System.out.println("Результат Rom:  "+result);
+        System.out.println("Результат: "+result);
     }
  
     public static void latCalc (String[] args, int arg, Boolean rom) {
@@ -149,7 +153,8 @@ public class test_project {
                 break;
             }
         }
-        if (rom) {latToRom(result);}
+        if (rom & result > 0) {latToRom(result);}
+        else if (rom & result <= 0) {System.out.print("Ошибка ковертации в римское число. Результат: " + result);}
         else {System.out.print("Результат: " + result);}
     }
 }
