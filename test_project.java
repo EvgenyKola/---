@@ -16,33 +16,43 @@ public class test_project {
         System.out.println("Введите выражение");
         Scanner keyboardScan = new Scanner (System.in);
         String string = keyboardScan.nextLine();
+        char[] chStr = string.toCharArray();
+        String firstStrCh = String.valueOf(chStr[0]);
+        String lastStrCh = String.valueOf(chStr[chStr.length-1]);
+
+        if (mathSymbols.contains(firstStrCh) || mathSymbols.contains(lastStrCh)) {
+            error("Ошибка ввода. неправильная последовательность арифметических знаков");
+        }
+        for (int i = 0; i<chStr.length; i++)
+        {
+            if (i>1 && (chStr[i] == chStr[i-1])) {
+                if (mathSymbols.contains(String.valueOf(chStr[i]))) {
+                    error("Ошибка ввода. неправильная последовательность арифметических знаков");
+                }
+            } 
+        }
         calc (string);
     }
 
     public static void calc (String arg) {
-        int o = 0; 
+        int o = 0;
         Boolean lat = false;
         Boolean rom = false;
         Boolean contune = true;
         String romString = "ivxzlcdm";
         String [] calcArray = new String [arg.length()];
         Arrays.fill(calcArray, "");
- 
-        for (String s: arg.toLowerCase().split("")) {
 
+        for (String s: arg.toLowerCase().split("")) {
             try {
                 int i = Integer.parseInt (s);
                 lat = true;
                 calcArray [o] += s;
             }
             catch (NumberFormatException e) {
-
                 if (romString.contains(s)){
                     calcArray [o] += s;
                     rom = true;     
-                    }
-                else if (!mathSymbols.contains(s)){
-                    error ("Ошибка ввода. Выражение содержит недопустимый символ");
                     }
                 else{
                     o++;
@@ -55,17 +65,12 @@ public class test_project {
                 error ("Ошибка ввода. Калькулятор не складывает арабские и римские числа");
             }
         }
-
-        if (!mathSymbols.contains(calcArray[0]) & !mathSymbols.contains(calcArray[calcArray.length-1])){
-          
-            if (contune == true & lat == true) {
-                latCalc (calcArray, o, false);
-            }
-            else if (contune == true & rom == true) {
-                romToLat (calcArray, o);
-            }
+        if (contune == true & lat == true) {
+            latCalc (calcArray, o, false);
         }
-        else {error ("Ошибка ввода");}
+        else if (contune == true & rom == true) {
+            romToLat (calcArray, o);
+        }
     }
 
     public static void romToLat (String[] args, int arg) {
@@ -132,7 +137,6 @@ public class test_project {
     public static void latCalc (String[] args, int arg, Boolean rom) {
         int result=0;
         int n=0;
-    
         for (int i = 0; i <= arg; i++) {
             try {
                 if (i == 0 ) {
@@ -154,22 +158,20 @@ public class test_project {
                 }
             }
             catch (NumberFormatException e) {
-                error ("Ошибка ввода данных");
+                error ("Ошибка ввода данных. Число слишком большое для типа Integer");
             }
         }
-
         if (operand > 1) {
             System.out.print("Количество операндов не соответствует заданию, но результат вы всё равно узнаете.\n");
         }
         else if (operand == 0) {
             error ("Не является арифметическим выражением");
         }
-
         if (rom & result > 0 && result < 4000) {latToRom(result);}
         else if (rom) {System.out.print("Вне диапазона допустимых римских числе (1—3999). Результат: " + result+"\n"); start ();}
         else {System.out.print("Результат: " + result+"\n"); start ();}
     }
-
+    
     public static void error (String message) {
         System.out.print(message+"\n"); 
         start ();
