@@ -29,22 +29,21 @@ public class test_project {
         Arrays.fill(calcArray, "");
  
         for (String s: arg.toLowerCase().split("")) {
+
             try {
                 int i = Integer.parseInt (s);
                 lat = true;
                 calcArray [o] += s;
             }
             catch (NumberFormatException e) {
+
                 if (romString.contains(s)){
                     calcArray [o] += s;
                     rom = true;     
                     }
                 else if (!mathSymbols.contains(s)){
-                    System.out.println("Недопустимый символ\n");
-                    start ();
-                    break;
+                    error ("Ошибка ввода. Выражение содержит недопустимый символ");
                     }
-
                 else{
                     o++;
                     calcArray [o] += s;
@@ -53,18 +52,20 @@ public class test_project {
                     }
             }
             if (rom == lat) {
-                System.out.println("Ошибка ввода данных\n");
-                contune = false;
-                start ();
-                break;
+                error ("Ошибка ввода. Калькулятор не складывает арабские и римские числа");
             }
         }
+
+        if (!mathSymbols.contains(calcArray[0]) & !mathSymbols.contains(calcArray[calcArray.length-1])){
+          
             if (contune == true & lat == true) {
                 latCalc (calcArray, o, false);
             }
             else if (contune == true & rom == true) {
                 romToLat (calcArray, o);
             }
+        }
+        else {error ("Ошибка ввода");}
     }
 
     public static void romToLat (String[] args, int arg) {
@@ -119,11 +120,8 @@ public class test_project {
 
         while (i < rom.length) {
             while (arg >= lat[i]) {
-                int t = arg/lat[i];
-                arg = arg%lat[i];
-                for(int l=0; l<t; l++) {
-                    result += rom[i];
-                }
+                result += rom[i];
+                arg -= lat[i];
             }
             i++;
         }
@@ -151,22 +149,30 @@ public class test_project {
                         case "-": result = result - n; break;
                         case "*": result = result * n; break; 
                         case "/": result = result / n; break; 
-                        default: System.out.print ("Неверный оператор: " + args[i]+"\n");
+                        default: error ("Неверный оператор: " + args[i]);
                     }
                 }
             }
             catch (NumberFormatException e) {
-                System.out.print("Ошибка"+"\n");
-                break;
+                error ("Ошибка ввода данных");
             }
         }
 
         if (operand > 1) {
             System.out.print("Количество операндов не соответствует заданию, но результат вы всё равно узнаете.\n");
         }
+        else if (operand == 0) {
+            error ("Не является арифметическим выражением");
+        }
 
         if (rom & result > 0 && result < 4000) {latToRom(result);}
         else if (rom) {System.out.print("Вне диапазона допустимых римских числе (1—3999). Результат: " + result+"\n"); start ();}
         else {System.out.print("Результат: " + result+"\n"); start ();}
+    }
+
+    public static void error (String message) {
+        System.out.print(message+"\n"); 
+        start ();
+        return;
     }
 }
